@@ -1859,7 +1859,7 @@ func (ps *Parser) Parse(input io.Reader, pageURL string) (Article, error) {
 		return Article{}, fmt.Errorf("failed to parse input: %v", err)
 	}
 
-	return ParseDoc(doc, pageURL)
+	return ps.ParseDoc(doc, pageURL)
 }
 
 // Parse parses input and find the main readable content.
@@ -1973,7 +1973,7 @@ func (ps *Parser) IsReadable(input io.Reader) bool {
 		return false
 	}
 
-	return IsReadableDoc(doc)
+	return ps.IsReadableDoc(doc)
 }
 
 func (ps *Parser) IsReadableDoc(doc *html.Node) bool {
