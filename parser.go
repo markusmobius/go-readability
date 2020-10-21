@@ -1853,6 +1853,19 @@ func (ps *Parser) isProbablyVisible(node *html.Node) bool {
 
 // Parse parses input and find the main readable content.
 func (ps *Parser) Parse(input io.Reader, pageURL string) (Article, error) {
+	// Parse input
+	doc, err = html.Parse(input)
+	if err != nil {
+		return Article{}, fmt.Errorf("failed to parse input: %v", err)
+	}
+
+	return ParseDoc(doc, pageURL)
+}
+
+// Parse parses input and find the main readable content.
+func (ps *Parser) ParseDoc(doc *html.Node, pageURL string) (Article, error) {
+	ps.doc = doc
+
 	// Reset parser data
 	ps.articleTitle = ""
 	ps.articleByline = ""
@@ -1870,12 +1883,6 @@ func (ps *Parser) Parse(input io.Reader, pageURL string) (Article, error) {
 	ps.documentURI, err = nurl.ParseRequestURI(pageURL)
 	if err != nil {
 		return Article{}, fmt.Errorf("failed to parse URL: %v", err)
-	}
-
-	// Parse input
-	ps.doc, err = html.Parse(input)
-	if err != nil {
-		return Article{}, fmt.Errorf("failed to parse input: %v", err)
 	}
 
 	// Avoid parsing too large documents, as per configuration option
@@ -1965,6 +1972,11 @@ func (ps *Parser) IsReadable(input io.Reader) bool {
 	if err != nil {
 		return false
 	}
+
+	return IsReadableDoc(doc)
+}
+
+func (ps *Parser) IsReadableDoc(doc *html.Node) bool {
 
 	// Get <p> and <pre> nodes.
 	// Also get <div> nodes which have <br> node(s) and append
