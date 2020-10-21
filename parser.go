@@ -1854,7 +1854,7 @@ func (ps *Parser) isProbablyVisible(node *html.Node) bool {
 // Parse parses input and find the main readable content.
 func (ps *Parser) Parse(input io.Reader, pageURL string) (Article, error) {
 	// Parse input
-	doc, err = html.Parse(input)
+	doc, err := html.Parse(input)
 	if err != nil {
 		return Article{}, fmt.Errorf("failed to parse input: %v", err)
 	}
